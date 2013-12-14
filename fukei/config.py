@@ -8,7 +8,30 @@ logger = logging.getLogger('config')
 class Config(dict):
 
     """Config  reads json file config firstly, then
-      parses command line and override the file config settings"""
+      parses command line and override the file config settings
+      
+    >>> from utils import log_config
+    >>> log_config('test_config', True)
+    >>> config = Config()
+    >>> config.args
+    ()
+    >>> config['args']
+    ()
+    >>> config.test_attr1 = 'test_attr1'
+    >>> config.test_attr1
+    'test_attr1'
+    >>> config['test_attr1']
+    'test_attr1'
+    >>> config['test_attr2'] = 'test_attr2'
+    >>> config.test_attr2
+    'test_attr2'
+    >>> config['test_attr2']
+    'test_attr2'
+    >>> config['test_attr2'] = 'new_test_attr2'
+    >>> config['test_attr2']
+    'new_test_attr2'
+
+    """
 
     def __init__(self, *args):
 
@@ -70,6 +93,5 @@ class Config(dict):
 
 
 if __name__ == '__main__':
-    con = Config()
-    print con.server
-    print con['args']
+    import doctest
+    doctest.testmod()
