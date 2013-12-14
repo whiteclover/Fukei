@@ -9,7 +9,7 @@ class CryptoIOStream(IOStream):
      `IOStrem#write_to_fd`for support encryption """
 
     def __init__(self, socket, *args, **kwargs):
-        super(CryptoIOStream, self).__init__(*args, **kwargs)
+        super(CryptoIOStream, self).__init__(socket, *args, **kwargs)
         self.crypto = crypto.new_crypto()
 
     def read_from_fd(self):
