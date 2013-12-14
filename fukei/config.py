@@ -1,4 +1,11 @@
-import json
+
+
+try:
+    import json
+except:
+    #handle the low python version < 2.6
+    import simplejson as json
+    
 import logging
 import os.path
 
@@ -9,7 +16,7 @@ class Config(dict):
 
     """Config  reads json file config firstly, then
       parses command line and override the file config settings
-      
+
     >>> from utils import log_config
     >>> log_config('test_config', True)
     >>> config = Config()
