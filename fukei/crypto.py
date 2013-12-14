@@ -24,8 +24,7 @@ def get_table(key):
     for i in xrange(1, 1024):
         table.sort(lambda x, y: int(a % (ord(x) + i) - a % (ord(y) + i)))
     encrypt_table = ''.join(table)
-    decrypt_table = string.maketrans(
-        encrypt_table, string.maketrans('', ''))
+    decrypt_table = string.maketrans(encrypt_table, string.maketrans('', ''))
     return encrypt_table, decrypt_table
 
 
@@ -79,7 +78,8 @@ class Crypto(object):
             try:
                 __import__('M2Crypto')
             except ImportError:
-                logger.error('M2Crypto is required to use encryption other than default method')
+                logger.error(
+                    'M2Crypto is required to use encryption other than default method')
                 sys.exit(1)
         if method:
             cls.encrypt_table, cls.decrypt_table = get_table(key)
@@ -123,8 +123,8 @@ class Crypto(object):
             if op == 1:
                 # this iv is for cipher, not decipher
                 self.cipher_iv = iv[:m[1]]
-            return M2Crypto.EVP.Cipher(method.replace('-', '_'), key, iv, op,
-                                       key_as_bytes=0, d='md5', salt=None, i=1, padding=1)
+            return M2Crypto.EVP.Cipher(method.replace('-', '_'),
+                    key, iv, op, key_as_bytes=0, d='md5', salt=None, i=1, padding=1)
 
         logger.error('method %s not supported' % method)
         sys.exit(1)
