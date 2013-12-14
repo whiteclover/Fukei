@@ -2,7 +2,8 @@
 import sys
 import os.path
 
-pardir = os.path.join(os.path.abspath(os.path.join(os.path.dirname(__file__))), os.pardir)
+pardir = os.path.join(
+    os.path.abspath(os.path.join(os.path.dirname(__file__))), os.pardir)
 sys.path.insert(0, pardir)
 
 from fukei.server import FukeiSocksServer
@@ -11,8 +12,8 @@ from fukei import crypto
 
 
 if __name__ == '__main__':
-	config_path = os.path.join(pardir, 'config', 'config.json')
-	config = Config.current(config_path)
-	crypto.setup_table(config.password, config.method)
-	server = FukeiSocksServer(side='local',config=config)
-	server.server_forever()
+    config_path = os.path.join(pardir, 'config', 'config.json')
+    config = Config.current(config_path)
+    crypto.setup_table(config.password, config.method)
+    server = FukeiSocksServer(side='local', config=config)
+    server.server_forever()
