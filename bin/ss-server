@@ -1,7 +1,13 @@
 #!/usr/bin/env python
 
-__version__ = "0.1"
-version = __version__
+from fukei.server import FukeiSocksServer
+from fukei.config import Config
+from fukei import crypto
 
-import tornado.ioloop
-from utils import  log_config
+
+if __name__ == '__main__':
+	os.path.abspath(os.path.join(os.getcwd(), os.path.pardir))
+	config = Config.current()
+	crypto.init_table(config.password, config.method)
+	server = FukeiSocksServer(side='server', cofing=config)
+	server.server_forever()
