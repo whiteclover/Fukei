@@ -8,7 +8,7 @@ except:
     
 import logging
 import os.path
-
+import sys
 logger = logging.getLogger('config')
 
 
@@ -40,10 +40,18 @@ class Config(dict):
 
     """
 
-    def __init__(self, *args):
+    @staticmethod
+    def current(default_path, sysargs=sys.argv):
+        if not hasattr(Config, '_current'):
+            Config._current = Config(default_path, sysargs)
+        return Config._current
+   
+
+    def __init__(self,sysargs = (), default_path =None):
 
         super(Config, self).__init__()
-        self.args = args
+        self.args = sysargs
+        self.default_path = default_path
         self.config_opt()
 
     def __getattr__(self, name):
@@ -97,6 +105,8 @@ class Config(dict):
         _("-v", "--version", help="Show Fukei version %s" % __version__)
 
         return parser.parse_args()
+
+
 
 
 if __name__ == '__main__':
