@@ -77,7 +77,7 @@ class Config(dict):
                 json_con = json.loads(f.read())
             self.server = self.server or json_con.get('server', None)
             self.password = self.password or json_con.get('password', None)
-            self.port = self.port or json_con.get('port', None)
+            self.server_port = self.server_port or json_con.get('server_port', None)
             self.local_port = self.local_port or json_con.get('local_port', None)
             self.method = self.method or json_con.get('method', 'table')
             self.timeout = self.timeout or json_con.get('timeout', None)
@@ -95,8 +95,8 @@ class Config(dict):
           "Password, should be same in client and server sides", type=str)
         _("-c", "--config", default='0.0.0.0',
           help="config.json path", type=str)
-        _("-p", "--port", default=89, help="Remote server port", type=int)
-        _("-l", "--local_port", default=90,
+        _("-p", "--server-port", default=89, help="Remote server port", type=int)
+        _("-l", "--local-port", default=90,
           help="Local client port", type=int)
         _("-m", "--method", default='table',
           help="Encryption method", type=str)
