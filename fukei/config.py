@@ -64,7 +64,7 @@ class Config(dict):
         opt = self.parse_cmdline()
         self.server = opt.server
         self.password = opt.password
-        self.port = opt.port
+        self.server_port = opt.server_port
         self.local_port = opt.local_port
         self.method = opt.method
         self.timeout = opt.timeout
