@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python
 
 try:
     import json
@@ -9,8 +9,9 @@ except:
 import logging
 import os.path
 import sys
-logger = logging.getLogger('config')
+from argparse import ArgumentParser
 
+logger = logging.getLogger('config')
 
 class Config(dict):
 
@@ -20,10 +21,10 @@ class Config(dict):
     >>> from utils import log_config
     >>> log_config('test_config', True)
     >>> config = Config()
-    >>> config.args
-    ()
-    >>> config['args']
-    ()
+    >>> config.server
+    '127.0.0.1'
+    >>> config['server']
+    '127.0.0.1'
     >>> config.test_attr1 = 'test_attr1'
     >>> config.test_attr1
     'test_attr1'
@@ -41,16 +42,16 @@ class Config(dict):
     """
 
     @staticmethod
-    def current(default_path, sysargs=sys.argv):
+    def current(default_path='path2json', args=sys.argv):
         if not hasattr(Config, '_current'):
-            Config._current = Config(default_path, sysargs)
+            Config._current = Config(default_path, args)
         return Config._current
    
 
-    def __init__(self,sysargs = (), default_path =None):
+    def __init__(self,default_path='path2json', args=sys.argv) :
 
         super(Config, self).__init__()
-        self.args = sysargs
+        self.args = args
         self.default_path = default_path
         self.config_opt()
 
@@ -68,8 +69,19 @@ class Config(dict):
         self.local_port = opt.local_port
         self.method = opt.method
         self.timeout = opt.timeout
-        if opt.config:
-            self.config_file_opt(opt.config)
+
+    def get_file_opt(self):
+        p = ArgumentParser(add_help=False)
+        p.add_argument("-c", "--config", default=self.default_path,
+          help="config.json path",  metavar="FILE")
+        opt, _ = p.parse_known_args(self.args)
+        if os.path.exists(opt.config):
+            with open(opt.config) as f:
+                return json.loads(f.read())
+        else:
+            logger.warning("the json file path `%s` is not exists" % opt.config)
+            return {}
+
 
     def config_file_opt(self, path2json):
         if os.path.exists(path2json):
@@ -85,29 +97,28 @@ class Config(dict):
             logger.warning("the json file path `%s` is not exists" % path2json)
 
     def parse_cmdline(self):
-        from argparse import ArgumentParser
         from fukei import __version__
         parser = ArgumentParser(usage="usage: PROG [options]")
         _ = parser.add_argument
         _("-s", "--server", default='127.0.0.1',
-          help="Remote server, IP address or domain", type=str)
+          help="Remote server, IP address or domain (default %(default)r)", type=str)
         _("-k", "--password", default='123', help=
-          "Password, should be same in client and server sides", type=str)
-        _("-c", "--config", default='0.0.0.0',
-          help="config.json path", type=str)
-        _("-p", "--server-port", default=89, help="Remote server port", type=int)
-        _("-l", "--local-port", default=90,
-          help="Local client port", type=int)
+          "Password, should be same in client and server sides (default %(default)r)", type=str)
+        _("-c", "--config", default=self.default_path,
+          help="config.json path (default %(default)r)", metavar="FILE")
+        _("-p", "--server-port", default=8388, help="Remote server port (default %(default)r)", type=int)
+        _("-l", "--local-port", default=1080,
+          help="Local client port (default %(default)r)", type=int)
         _("-m", "--method", default='table',
-          help="Encryption method", type=str)
-        _("-t", "--timeout", default=3,
-          help="connection timeout", type=int)
+          help="Encryption method (default %(default)r)", type=str)
+        _("-t", "--timeout", default=10,
+          help="connection timeout (default %(default)r)", type=int)
         _("-v", "--version", help="Show Fukei version %s" % __version__)
+        c = self.get_file_opt()
+        parser.set_defaults(**c)
 
-        return parser.parse_args()
-
-
-
+        opt, _ = parser.parse_known_args(self.args)
+        return opt
 
 if __name__ == '__main__':
     import doctest
