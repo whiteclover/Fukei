@@ -1,5 +1,8 @@
 import logging
 
+
+
+
 class lazy_property(object):
     """
     be used for lazy evaluation of an object attribute.
@@ -17,6 +20,20 @@ class lazy_property(object):
         setattr(obj, self.func_name, value)
         return value
 
+
+
+def import_classes(moudle_name, class_names):
+    classes = []
+    m = __import__(moudle_name, globals(), locals(), class_names)
+    for c in  class_names:
+        classes.append(getattr(m, c))
+    return classes
+
+def import_class(module2cls):
+    d = module2cls.rfind(".")
+    classname = module2cls[d + 1: len(module2cls)]
+    m = __import__(module2cls[0:d], globals(), locals(), [classname])
+    return getattr(m, classname)
 
 def log_config(tag, debug = False):
     """"
