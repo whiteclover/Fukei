@@ -5,7 +5,9 @@ from .base import Socks5Connection
 
 from fukei.config import Config
 import socket
+import struct
 import logging 
+import functools
 
 logger = logging.getLogger('connection.local')
 
@@ -23,17 +25,36 @@ class LocalConnection(Socks5Connection):
         self.stream.read_bytes(2, self.on_auth_num_methods)
 
 
+
     def do_connect(self):
     	config = Config.current()
-        logger.error( "add type : %s " % socket.AF_INET)
-
-        self.upstream = self.upstream_cls((config.server, config.server_port),
-                            socket.AF_INET,
+        
+        logger.info("server : %s, %s" % (config.server, config.server_port))
+        logger.info("server dest: %s, %s" % self.dest)
+        dest = (config.server, config.server_port)
+        self.upstream = self.upstream_cls( dest, socket.AF_INET,
                             self.on_upstream_connect, self.on_upstream_error,
                             self.on_upstream_data, self.on_upstream_close)
 
     def on_upstream_connect(self, _dummy):
-        self.write_reply(0x00, socket.inet_aton('0.0.0.0') + struct.pack("!H", config.server_port))
+        config = Config.current()
+        #self.write_reply(0x00, socket.inet_aton('0.0.0.0') + struct.pack("!H", config.server_port))
         on_finish = functools.partial(self.on_socks_data, finished=True)
-        #self.upstream.write()
+        #self.write_request()
         self.stream.read_until_close(on_finish, self.on_socks_data)
+
+    def write_request(self, data=None):
+        logger.info('wait request...')
+        address_type = self.atyp
+        if data is None:
+            if self.dest:
+                data = self.raw_dest_addr + self.raw_dest_port
+            else:
+                data = struct.pack("!BLH", 0x01, 0x00, 0x00)
+        else:
+            if self.atyp == 0x03:
+                address_type = 0x01
+        self.upstream.write(struct.pack("!BBBB", self.ver, 0x01, 0x00, socket.AF_INET
+                                      ) + data)
+        # logger.debug("sent request: %s" % (self.REPLY_CODES.get(
+        #     code, "UNKNOWN REPLY")))
