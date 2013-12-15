@@ -43,12 +43,13 @@ class FukeiSocksServer(object):
         connection_cls = get_connection(self.side)()
         streams = get_streams(self.side)()
         server = Socks5Server(connection_cls, streams)
-        logger.info("Startting Fukei ....")
+        
         server.bind(port, address=addr, backlog=1024)
         return server
 
     def server_forever(self):
         try:
+            logger.info("Start Listening on %s:%s ...." % (self.address, self.port))
             self.server = self.create_server(self.address, self.port)
             self.server.start()
             tornado.ioloop.IOLoop.instance().start()
