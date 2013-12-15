@@ -16,10 +16,9 @@ class Upstream(object):
 
     def __init__(self, dest, address_type, connection_callback,
                  error_callback, streaming_callbak, close_callback):
-
         assert address_type in [socket.AF_INET, socket.AF_INET6]
         self.dest = dest
-        self.address_type = address_type
+        self._address_type = address_type
         self.connection_callback = connection_callback
         self.error_callback = error_callback
         self.streaming_callback = streaming_callbak

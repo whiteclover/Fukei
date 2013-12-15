@@ -1,6 +1,12 @@
 
 from .base import Upstream
 from tornado.iostream import IOStream
+import socket
+import logging
+import functools
+
+logger = logging.getLogger('connection')
+
 
 class RemoteUpstream(Upstream):
 
@@ -11,7 +17,7 @@ class RemoteUpstream(Upstream):
     """
 
     def initialize(self):
-        self.socket = socket.socket(self.address_type, socket.SOCK_STREAM)
+        self.socket = socket.socket(self._address_type, socket.SOCK_STREAM)
         self.stream = IOStream(self.socket)
         self.stream.set_close_callback(self.on_close)
 
@@ -24,29 +30,31 @@ class RemoteUpstream(Upstream):
 
     @property
     def address_type(self):
-        return self.address_type
+        return self._address_type
 
     def on_connect(self):
-        logger.debug("connected!")
-        self.connection_callback()
+
+        self.connection_callback(self)
         on_finish = functools.partial(self.on_streaming_data, finished=True)
         self.stream.read_until_close(on_finish, self.on_streaming_data)
 
     def on_close(self):
         if self.stream.error:
-            logger.debug("closed due to error: " + str(self.stream.error))
-            self.error_callback(self.stream.error)
+            self.error_callback(self, self.stream.error)
         else:
-            logger.debug("closed")
-            self.close_callback()
+            self.close_callback(self)
 
     def on_streaming_data(self, data, finished=False):
         if len(data):
-            logger.debug("received %d bytes of data." % len(data))
-            self.streaming_callback(data)
+            self.streaming_callback(self, data)
 
     def do_write(self, data):
-        self.stream.write(data)
+        try:
+            self.stream.write(data)
+        except IOError as e:
+            self.close()
 
     def do_close(self):
-        self.stream.close()
+        if self.socket:
+            logger.info("close upstream: %s:%s" % self.address)
+            self.stream.close()
