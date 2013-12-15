@@ -14,7 +14,7 @@ from fukei.utils import  log_config
 if __name__ == '__main__':
     config_path = os.path.join(pardir, 'config', 'config.json')
     config = Config.current(config_path)
-    log_config('Fukei', config.debug)
+    log_config('FukeiLocal', config.debug)
     crypto.setup_table(config.password, config.method)
     server = FukeiSocksServer(side='local', config=config)
     server.server_forever()
