@@ -1,12 +1,5 @@
 #!/usr/bin/env python
 
-try:
-    import json
-except:
-    #handle the low python version < 2.6
-    import simplejson as json
-
-
     
 import logging
 import os.path
@@ -16,32 +9,6 @@ from .utils import json_loads
 
 logger = logging.getLogger('config')
 
-
-def ascii_list(data):
-    rv = []
-    for item in data:
-        if isinstance(item, unicode):
-            item = item.encode('utf-8')
-        elif isinstance(item, list):
-            item = _decode_list(item)
-        elif isinstance(item, dict):
-            item = _decode_dict(item)
-        rv.append(item)
-    return rv
-
-def ascii_dict(data):
-    rv = {}
-    for key, value in data.iteritems():
-        if isinstance(key, unicode):
-            key = key.encode('utf-8')
-        if isinstance(value, unicode):
-            value = value.encode('utf-8')
-        elif isinstance(value, list):
-            value = ascii_list(value)
-        elif isinstance(value, dict):
-            value = ascii_dict(value)
-        rv[key] = value
-    return rv
 
 class Config(dict):
 
