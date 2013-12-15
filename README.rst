@@ -106,7 +106,7 @@ Others:
 Performance & Require
 -----------
 
-You may want to install Tornado for better performance.
+You must to install Tornado.
 
 ::
 
