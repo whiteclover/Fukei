@@ -9,9 +9,8 @@ import errno
 import functools
 from tornado import stack_context
 import os
-# from crypto import Encryptor
-from fukei.utils import socket_bind_np
 
+from fukei.utils import socket_bind_np
 socket_bind_np()
 
 
@@ -72,7 +71,6 @@ class Socks5Connection(object):
 
     def on_connection_close(self):
         logger.debug("disconnected!")
-        self.stream.close()
         self.clean_upstream()
 
     def on_auth_num_methods(self, data):
@@ -187,7 +185,6 @@ class Socks5Connection(object):
         addr_type = self.upstream.address_type
         addr = self.upstream.address
         logger.debug("upstream connected from %s:%d" % addr)
-
         src_addr = self.convert_machine_address(addr_type, addr[0])
         self.write_reply(0x00, src_addr + struct.pack("!H", addr[1]))
 
