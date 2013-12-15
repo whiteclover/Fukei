@@ -5,13 +5,43 @@ try:
 except:
     #handle the low python version < 2.6
     import simplejson as json
+
+
     
 import logging
 import os.path
 import sys
 from argparse import ArgumentParser
+from .utils import json_loads
 
 logger = logging.getLogger('config')
+
+
+def ascii_list(data):
+    rv = []
+    for item in data:
+        if isinstance(item, unicode):
+            item = item.encode('utf-8')
+        elif isinstance(item, list):
+            item = _decode_list(item)
+        elif isinstance(item, dict):
+            item = _decode_dict(item)
+        rv.append(item)
+    return rv
+
+def ascii_dict(data):
+    rv = {}
+    for key, value in data.iteritems():
+        if isinstance(key, unicode):
+            key = key.encode('utf-8')
+        if isinstance(value, unicode):
+            value = value.encode('utf-8')
+        elif isinstance(value, list):
+            value = ascii_list(value)
+        elif isinstance(value, dict):
+            value = ascii_dict(value)
+        rv[key] = value
+    return rv
 
 class Config(dict):
 
@@ -78,7 +108,7 @@ class Config(dict):
         opt, _ = p.parse_known_args(self.args)
         if os.path.exists(opt.config):
             with open(opt.config) as f:
-                return json.loads(f.read())
+                return json_loads(f.read())
         else:
             logger.warning("the json file path `%s` is not exists" % opt.config)
             return {}
@@ -86,8 +116,8 @@ class Config(dict):
 
     def config_file_opt(self, path2json):
         if os.path.exists(path2json):
-            with open(path2json) as f:
-                json_con = json.loads(f.read())
+            with codecs.open(opt.config, 'r', encoding='ascii') as f:
+                json_con = json_loads(f.read())
             self.server = self.server or json_con.get('server', None)
             self.password = self.password or json_con.get('password', None)
             self.server_port = self.server_port or json_con.get('server_port', None)

@@ -1,9 +1,45 @@
+
 import logging
 
+try:
+    from  json import loads
+except:
+    #handle the low python version < 2.6
+    from  simplejson import loads
 
+
+
+def json_loads(raw):
+    def ascii_list(data):
+        rv = []
+        for item in data:
+            if isinstance(item, unicode):
+                item = item.encode('utf-8')
+            elif isinstance(item, list):
+                item = _decode_list(item)
+            elif isinstance(item, dict):
+                item = _decode_dict(item)
+            rv.append(item)
+        return rv
+
+    def ascii_dict(data):
+        rv = {}
+        for key, value in data.iteritems():
+            if isinstance(key, unicode):
+                key = key.encode('utf-8')
+            if isinstance(value, unicode):
+                value = value.encode('utf-8')
+            elif isinstance(value, list):
+                value = ascii_list(value)
+            elif isinstance(value, dict):
+                value = ascii_dict(value)
+            rv[key] = value
+        return rv
+    return loads(raw, object_hook= ascii_dict)
 
 
 class lazy_property(object):
+
     """
     be used for lazy evaluation of an object attribute.
     property should represent non-mutable data, as it replaces itself.
@@ -21,13 +57,13 @@ class lazy_property(object):
         return value
 
 
-
 def import_classes(moudle_name, class_names):
     classes = []
     m = __import__(moudle_name, globals(), locals(), class_names)
-    for c in  class_names:
+    for c in class_names:
         classes.append(getattr(m, c))
     return classes
+
 
 def import_class(module2cls):
     d = module2cls.rfind(".")
@@ -35,7 +71,8 @@ def import_class(module2cls):
     m = __import__(module2cls[0:d], globals(), locals(), [classname])
     return getattr(m, classname)
 
-def log_config(tag, debug = False):
+
+def log_config(tag, debug=False):
     """"
     be used for confguration log level and format
     >>> log_config('log_test', debug=True)
@@ -44,7 +81,8 @@ def log_config(tag, debug = False):
     >>> logger.info('test info')
     
     """
-    logfmt = tag + '[%%(process)d]: [%%(levelname)s] %s%%(message)s' % '%(name)s - '
+    logfmt = tag + \
+        '[%%(process)d]: [%%(levelname)s] %s%%(message)s' % '%(name)s - '
     config = lambda x: logging.basicConfig(level=x, format='[%(asctime)s] ' + logfmt, datefmt='%Y%m%d %H:%M:%S')
     if debug:
         config(logging.DEBUG)
@@ -55,16 +93,18 @@ def log_config(tag, debug = False):
 import socket
 import ctypes
 
+
 class sockaddr(ctypes.Structure):
     _fields_ = [('sa_family', ctypes.c_short),
-     ('__pad1', ctypes.c_ushort),
-     ('ipv4_addr', ctypes.c_byte * 4),
-     ('ipv6_addr', ctypes.c_byte * 16),
-     ('__pad2', ctypes.c_ulong)]
+                ('__pad1', ctypes.c_ushort),
+                ('ipv4_addr', ctypes.c_byte * 4),
+                ('ipv6_addr', ctypes.c_byte * 16),
+                ('__pad2', ctypes.c_ulong)]
 
 
 WSAStringToAddressA = ctypes.windll.ws2_32.WSAStringToAddressA
 WSAAddressToStringA = ctypes.windll.ws2_32.WSAAddressToStringA
+
 
 def inet_pton(address_family, ip_string):
     """
@@ -121,4 +161,3 @@ def socket_bind_np():
 if __name__ == '__main__':
     import doctest
     doctest.testmod()
-
