@@ -9,11 +9,12 @@ sys.path.insert(0, pardir)
 from fukei.server import FukeiSocksServer
 from fukei.config import Config
 from fukei import crypto
-
+from fukei.utils import  log_config
 
 if __name__ == '__main__':
     config_path = os.path.join(pardir, 'config', 'config.json')
     config = Config.current(config_path)
+    log_config('FukeiServer', config.debug)
     crypto.setup_table(config.password, config.method)
-    server = FukeiSocksServer(side='server', cofing=config)
+    server = FukeiSocksServer(side='server', config=config)
     server.server_forever()

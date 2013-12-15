@@ -69,6 +69,7 @@ class Config(dict):
         self.local_port = opt.local_port
         self.method = opt.method
         self.timeout = opt.timeout
+        self.debug = opt.debug
 
     def get_file_opt(self):
         p = ArgumentParser(add_help=False)
@@ -93,6 +94,7 @@ class Config(dict):
             self.local_port = self.local_port or json_con.get('local_port', None)
             self.method = self.method or json_con.get('method', 'table')
             self.timeout = self.timeout or json_con.get('timeout', None)
+            self.debug = self.debug or json_con.get('debug', False)
         else:
             logger.warning("the json file path `%s` is not exists" % path2json)
 
@@ -113,6 +115,8 @@ class Config(dict):
           help="Encryption method (default %(default)r)", type=str)
         _("-t", "--timeout", default=10,
           help="connection timeout (default %(default)r)", type=int)
+        _("-d", "--debug", action='store_true', default=False,
+          help="open debug mode (default %(default)r)",)
         _("-v", "--version", help="Show Fukei version %s" % __version__)
         c = self.get_file_opt()
         parser.set_defaults(**c)
