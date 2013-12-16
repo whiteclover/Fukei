@@ -6,45 +6,41 @@ from .base import Socks5Connection
 from fukei.config import Config
 import socket
 import struct
-import logging 
+import logging
 import functools
 
 logger = logging.getLogger('connection.local')
 
+
 class LocalConnection(Socks5Connection):
 
     """LocalSocksServer"""
-
-    # def __init__(self, stream, address, upstream_cls=None)
-
-    #     super(LocalConncection, self).__init__(stream, address, upstream_cls)
 
     def on_connected(self):
         logger.debug('start connect...')
         self.stream.set_close_callback(self.on_connection_close)
         self.stream.read_bytes(2, self.on_auth_num_methods)
 
-
-
     def do_connect(self):
-    	config = Config.current()
-        
+        config = Config.current()
+
         logger.info("server : %s, %s" % (config.server, config.server_port))
         logger.info("server dest: %s, %s" % self.dest)
         dest = (config.server, config.server_port)
-        self.upstream = self.upstream_cls( dest, socket.AF_INET,
-                            self.on_upstream_connect, self.on_upstream_error,
-                            self.on_upstream_data, self.on_upstream_close)
+        self.upstream = self.upstream_cls(dest, socket.AF_INET,
+                    self.on_upstream_connect, self.on_upstream_error,
+                    self.on_upstream_data, self.on_upstream_close)
 
     def on_upstream_connect(self, _dummy):
         config = Config.current()
-        #self.write_reply(0x00, socket.inet_aton('0.0.0.0') + struct.pack("!H", config.server_port))
+        self.write_reply(0x00, socket.inet_aton('0.0.0.0')
+                         + struct.pack("!H", config.server_port))
+        self.write_request()
         on_finish = functools.partial(self.on_socks_data, finished=True)
-        #self.write_request()
         self.stream.read_until_close(on_finish, self.on_socks_data)
 
     def write_request(self, data=None):
-        logger.info('wait request...')
+        logger.debug('wait request...')
         address_type = self.atyp
         if data is None:
             if self.dest:
@@ -54,7 +50,4 @@ class LocalConnection(Socks5Connection):
         else:
             if self.atyp == 0x03:
                 address_type = 0x01
-        self.upstream.write(struct.pack("!BBBB", self.ver, 0x01, 0x00, socket.AF_INET
-                                      ) + data)
-        # logger.debug("sent request: %s" % (self.REPLY_CODES.get(
-        #     code, "UNKNOWN REPLY")))
+        self.upstream.write(struct.pack("!B", address_type) + data)

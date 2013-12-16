@@ -200,7 +200,7 @@ class Socks5Connection(object):
     def on_upstream_data(self, _dummy, data):
         try:
             self.stream.write(data)
-            logger.debug("transported %d bytes of data from upstream." %
+            logger.debug("recevied %d bytes of data from upstream." %
                          len(data))
         except IOError as e:
             logger.debug("cannot write: %s" % str(e))
@@ -220,7 +220,7 @@ class Socks5Connection(object):
     def on_socks_data(self, data, finished=False):
         if data:
             self.upstream.write(data)
-            logger.debug("transported %d bytes of data to upstream." %
+            logger.debug("sent %d bytes of data to upstream." %
                          len(data))
 
     def write_reply(self, code, data=None):
