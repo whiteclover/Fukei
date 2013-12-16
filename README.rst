@@ -119,6 +119,13 @@ Or:
     $ sudo pip install tornado
 
 
+Alert
+---------------
+
+The Tornado IOStream doesn't support timeout.
+so timeout setting is not work, setting it just useless .
+
+
 License
 -------
 
