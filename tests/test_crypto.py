@@ -27,6 +27,16 @@ class TestCrypto(unittest.TestCase):
             d = e.encrypt(self.data)
             self.assertEqual(e.decrypt(d), self.data)
 
+    def test_pairs(self):
+        from uuid import uuid4
+        crypto.setup_table('12233', 'des-cfb')
+        e = crypto.new_crypto()
+        d = crypto.new_crypto()
+        for i in range(100):
+            data = uuid4().bytes
+            e_data = e.encrypt(str(data))
+            self.assertEqual(d.decrypt(e_data ), data)
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
