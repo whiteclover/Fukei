@@ -3,7 +3,7 @@ import logging
 
 import functools
 
-logger = logging.getLogger('base')
+logger = logging.getLogger('upstream.base')
 
 
 class Upstream(object):

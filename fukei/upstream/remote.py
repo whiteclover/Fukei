@@ -5,7 +5,7 @@ import socket
 import logging
 import functools
 
-logger = logging.getLogger('connection')
+logger = logging.getLogger('upstream.remote')
 
 
 class RemoteUpstream(Upstream):

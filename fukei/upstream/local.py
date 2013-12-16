@@ -7,7 +7,7 @@ import socket
 import logging
 
 
-logger = logging.getLogger('local')
+logger = logging.getLogger('upstream.local')
 class CryptoIOStream(IOStream):
 
     """CryptoIOStream overrive the `IOStrem#read_from_fd`
