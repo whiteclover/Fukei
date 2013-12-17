@@ -101,9 +101,13 @@ class sockaddr(ctypes.Structure):
                 ('ipv6_addr', ctypes.c_byte * 16),
                 ('__pad2', ctypes.c_ulong)]
 
-
-WSAStringToAddressA = ctypes.windll.ws2_32.WSAStringToAddressA
-WSAAddressToStringA = ctypes.windll.ws2_32.WSAAddressToStringA
+try:
+    WSAStringToAddressA = ctypes.windll.ws2_32.WSAStringToAddressA
+    WSAAddressToStringA = ctypes.windll.ws2_32.WSAAddressToStringA
+except:
+    #handle for not windows platform
+    WSAStringToAddressA = None
+    WSAAddressToStringA = None
 
 
 def inet_pton(address_family, ip_string):
