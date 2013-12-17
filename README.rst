@@ -119,7 +119,7 @@ Or:
     $ sudo pip install tornado
 
 
-And if use python2.6 , you need to install argparse for python2.6
+And if use python2.6 , you need to install argparse for python2.6:
 
 ::
 	$ sudo pip install argpasre
