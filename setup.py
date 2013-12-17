@@ -11,19 +11,16 @@ setup(
     description = "A Python Tornado port of shadowsocks and socks proxy",
     author = 'Thomas Huang',
     url = 'https://github.com/thomashuang/Fukei',
-    packages = ['fukei'],
+    packages = ['fukei', 'fukei.connection', 'fukei.upstream'],
     package_data={
         'fukei': ['README.rst', 'LICENSE', 'config/config.json']
     },
     install_requires = ['setuptools',
                         ],
-    entry_points="""
-    [console_scripts]
-    ss-local = bin/ss-local
-    sss-erver = bin/ss-server
-    """,
+    scripts=['bin/ss-local', 'bin/ss-server', 'bin/ss-default'],
     classifiers=[
         'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Topic :: Internet :: Proxy Servers',
         ],
