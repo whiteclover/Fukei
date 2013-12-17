@@ -106,7 +106,7 @@ Others:
 Performance & Require
 -----------
 
-You must to install Tornado.
+You must to install Tornado (require version 3.0+).
 
 ::
 
@@ -117,6 +117,12 @@ Or:
 ::
 
     $ sudo pip install tornado
+
+
+And if use python2.6 , you need to install argparse for python2.6
+
+::
+	$ sudo pip install argpasre
 
 
 Alert
