@@ -103,7 +103,7 @@ class Crypto(object):
 
     @lazy_property
     def cipher_len(self):
-        return slef.METHOD_SUPPORTED.get(self.method, None)
+        return self.METHOD_SUPPORTED.get(self.method, None)
 
     @property
     def iv_len(self):
