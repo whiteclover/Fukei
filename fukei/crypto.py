@@ -48,7 +48,11 @@ def EVP_BytesToKey(password, key_len, iv_len):
     return (key, iv)
 
 
-method_supported = {
+
+
+class Crypto(object):
+
+    METHOD_SUPPORTED = {
     'aes-128-cfb': (16, 16),
     'aes-192-cfb': (24, 16),
     'aes-256-cfb': (32, 16),
@@ -62,10 +66,8 @@ method_supported = {
     'rc2-cfb': (16, 8),
     'rc4': (16, 0),
     'seed-cfb': (16, 16),
-}
+    }
 
-
-class Crypto(object):
     method = None
     key = None
     encrypt_table = decrypt_table = None
@@ -101,7 +103,7 @@ class Crypto(object):
 
     @lazy_property
     def cipher_len(self):
-        return method_supported.get(self.method, None)
+        return slef.METHOD_SUPPORTED.get(self.method, None)
 
     @property
     def iv_len(self):
