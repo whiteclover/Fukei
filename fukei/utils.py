@@ -2,10 +2,9 @@
 import logging
 
 try:
-    from  json import loads
-except:
-    #handle the low python version < 2.6
     from  simplejson import loads
+except:
+    from  json import loads
 
 
 
