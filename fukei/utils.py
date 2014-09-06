@@ -15,9 +15,9 @@ def json_loads(raw):
             if isinstance(item, unicode):
                 item = item.encode('utf-8')
             elif isinstance(item, list):
-                item = _decode_list(item)
+                item = ascii_list(item)
             elif isinstance(item, dict):
-                item = _decode_dict(item)
+                item = ascii_dict(item)
             rv.append(item)
         return rv
 
