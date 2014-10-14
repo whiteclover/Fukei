@@ -1,3 +1,0 @@
-class TCPUpstream(object):
-
-	def 

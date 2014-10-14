@@ -66,7 +66,6 @@ class Socks5Connection(object):
 
     def on_connected(self):
         logger.debug('start connect...')
-        self.first_conneted = False
         self.stream.read_bytes(2, self.on_auth_num_methods)
 
 
