@@ -49,7 +49,7 @@ class FukeiSocksServer(object):
 
     def server_forever(self):
         try:
-            logger.info("Start Listening on %s:%s ...." % (self.address, self.port))
+            logger.debug("Start Listening on %s:%s ...." % (self.address, self.port))
             self.server = self.create_server(self.address, self.port)
             self.server.start()
             tornado.ioloop.IOLoop.instance().start()

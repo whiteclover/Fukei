@@ -59,15 +59,16 @@ class Socks5Connection(object):
         if upstream_cls is None:
             raise TypeError('a upstream is necessary')
         self.upstream_cls = upstream_cls
-        self.on_connected()
+        self.stream.set_close_callback(self.on_connection_close)
         self.dest = None
         self.sent_reply = False
-
+        self.on_connected()
 
     def on_connected(self):
         logger.debug('start connect...')
-        self.stream.set_close_callback(self.on_connection_close)
+        self.first_conneted = False
         self.stream.read_bytes(2, self.on_auth_num_methods)
+
 
     def on_connection_close(self):
         logger.debug("disconnected!")
@@ -164,7 +165,7 @@ class Socks5Connection(object):
         self.on_request_received()
 
     def on_request_received(self):
-        logger.info("received request: " + self.COMMAND_MAP[
+        logger.debug("received request: " + self.COMMAND_MAP[
             self.cmd] + ", destination: %s:%d" % self.dest)
 
         self.command_processors = {
@@ -197,7 +198,7 @@ class Socks5Connection(object):
             self.write_reply(self.ERRNO_MAP.get(no, 0x01))
         self.stream.close()
 
-    def on_upstream_data(self, _dummy, data):
+    def on_upstream_data(self, _dummy, data, finished=False):
         try:
             self.stream.write(data)
             logger.debug("recevied %d bytes of data from upstream." %
@@ -206,6 +207,8 @@ class Socks5Connection(object):
             logger.debug("cannot write: %s" % str(e))
             if self.upstream:
                 self.upstream.close()
+        if finished:
+            self.on_connected()
 
     def on_upstream_close(self, _dummy=None):
         self.stream.close()

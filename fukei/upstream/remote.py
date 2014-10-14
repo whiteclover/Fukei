@@ -46,7 +46,7 @@ class RemoteUpstream(Upstream):
 
     def on_streaming_data(self, data, finished=False):
         if len(data):
-            self.streaming_callback(self, data)
+            self.streaming_callback(self, data, finished)
 
     def do_write(self, data):
         try:
@@ -56,5 +56,5 @@ class RemoteUpstream(Upstream):
 
     def do_close(self):
         if self.socket:
-            logger.info("close upstream: %s:%s" % self.address)
+            logger.debug("close upstream: %s" % self.socket)
             self.stream.close()

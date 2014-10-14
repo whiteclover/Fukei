@@ -4,5 +4,5 @@
     "local_port":1081,
     "password":"Keep Your Password",
     "timeout":60,
-    "method":"aes-128-cfb"
+    "method":"table"
 }

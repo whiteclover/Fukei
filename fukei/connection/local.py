@@ -16,16 +16,11 @@ class LocalConnection(Socks5Connection):
 
     """LocalSocksServer"""
 
-    def on_connected(self):
-        logger.debug('start connect...')
-        self.stream.set_close_callback(self.on_connection_close)
-        self.stream.read_bytes(2, self.on_auth_num_methods)
-
     def do_connect(self):
         config = Config.current()
 
-        logger.info("server : %s, %s" % (config.server, config.server_port))
-        logger.info("server dest: %s, %s" % self.dest)
+        logger.debug("server : %s, %s" % (config.server, config.server_port))
+        logger.debug("server dest: %s, %s" % self.dest)
         dest = (config.server, config.server_port)
         self.upstream = self.upstream_cls(dest, socket.AF_INET,
                     self.on_upstream_connect, self.on_upstream_error,

@@ -14,16 +14,17 @@ class RemoteConnection(Socks5Connection):
 
     """RemoteConnection"""
 
-    def on_connected(self):
+    def __init__(self, stream, address, upstream_cls=None):
         self.cmd = 0x01
         self.ver = 0x05
-        logger.debug('start connect...')
-        self.stream.set_close_callback(self.on_connection_close)
+        Socks5Connection.__init__(self, stream, address, upstream_cls)
+
+    def on_connected(self):
         self.stream.read_bytes(1, self.on_request)
 
     def on_request(self, data):
         self.atyp, = struct.unpack('!B', data)
-        logger.info(" remote address type: %s" % (
+        logger.debug(" remote address type: %s" % (
             self.ADDRESS_TYPE_MAP.get(self.atyp, "UNKNOWN ADDRESS TYPE")))
 
         if self.atyp not in self.ACCEPTED_ADDRESS_TYPES:

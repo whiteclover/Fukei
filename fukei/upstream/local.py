@@ -3,7 +3,6 @@ from .remote import RemoteUpstream
 from tornado.iostream import IOStream
 from fukei import crypto
 import socket
-
 import logging
 
 
@@ -39,5 +38,3 @@ class LocalUpstream(RemoteUpstream):
         self.socket = socket.socket(self._address_type, socket.SOCK_STREAM)
         self.stream = CryptoIOStream(self.socket)
         self.stream.set_close_callback(self.on_close)
-
-    

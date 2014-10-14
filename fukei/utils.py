@@ -77,7 +77,7 @@ def log_config(tag, debug=False):
     >>> log_config('log_test', debug=True)
     >>> logger = logging.getLogger('utils')
     >>> logger.debug('test debug')
-    >>> logger.info('test info')
+    >>> logger.debug('test debug')
     
     """
     logfmt = tag + \
