@@ -110,7 +110,7 @@ You must to install Tornado (require version 3.0+).
 
 ::
 
-    $ sudo apt-get install python-tonrado
+    $ sudo apt-get install python-tornado
 
 Or:
 
