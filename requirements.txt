@@ -1,1 +1,2 @@
 tornado>=3.0
+m2crypto>=0.22
