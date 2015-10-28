@@ -1,13 +1,13 @@
 Fukei
 =============
 
-A Python Tornado port of shadowsocks and socks proxy 
+A Python Tornado port of shadowsocks and socks proxy
 
 
 Usage
 -----
 
-First, make sure you have Python 2.6 or 2.7 (support windows).
+First, make sure you have Python 2.6 or 2.7 (supports windows).
 
 ::
 
@@ -72,18 +72,18 @@ Change the proxy settings in your browser to
 
     protocol: socks5
     hostname: 127.0.0.1
-    port:     your local_port
+    port:     your_local_port
 
 Command line args
 -----------------
 
-You can use args to override settings from ``config.json``.
+You can pass command line arguments to override settings from ``config.json``.
 
 ::
 
     ss-local -s server_name -p server_port -l local_port -k password -m bf-cfb
     ss-server -p server_port -k password -m bf-cfb
-    sss-erver -c /etc/fukei/config.json
+    ss-server -c /etc/fukei/config.json
 
 Encryption
 ----------
@@ -103,10 +103,10 @@ Others:
 
     pip install M2Crypto
 
-Performance & Require
+Requirements
 -----------
 
-You must to install Tornado (require version 3.0+).
+You must to install Tornado (requires version 3.0+).
 
 ::
 
@@ -119,7 +119,7 @@ Or:
     $ sudo pip install tornado
 
 
-And if use python2.6 , you need to install argparse for python2.6
+And if using python2.6, you need to install argparse for python2.6
 
 ::
 
@@ -129,8 +129,8 @@ And if use python2.6 , you need to install argparse for python2.6
 Alert
 ---------------
 
-The Tornado IOStream doesn't support timeout.
-so timeout setting is not work, setting it just useless .
+Tornado IOStream doesn't support timeout.
+Hence the timeout setting is useless in this case.
 
 
 License
