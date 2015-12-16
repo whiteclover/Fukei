@@ -1,7 +1,7 @@
 Fukei
 =============
 
-A Python Tornado port of shadowsocks and socks proxy
+A Python Tornado port of socks proxy
 
 
 Usage
@@ -48,7 +48,7 @@ Explanation of the fields:
 	                        (default 'Keep Your Password')
 	  -c FILE, --config FILE
 	                        config.json path (default
-	                        'F:\\Projects\\Fukei\\bin\\..\\config\\config.json')
+	                        '/Fukei/bin/../config/config.json')
 	  -p SERVER_PORT, --server-port SERVER_PORT
 	                        Remote server port (default 8388)
 	  -l LOCAL_PORT, --local-port LOCAL_PORT
